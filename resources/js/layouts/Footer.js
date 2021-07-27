@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="container">
         <section className="footer-top padding-y">
           <div className="row">
-            <aside className="col-md-4">
+            <aside className="col-md-6">
               <article className="mr-3 float-left">
                 <img src={icon} className="logo-footer" />
               </article>

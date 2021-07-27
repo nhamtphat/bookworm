@@ -44,6 +44,7 @@ function Cart(props) {
       })
       .catch((error) => {
         let data = error.response.data
+        console.log(data.unavailable_products)
         data.unavailable_products.forEach((item) => {
           props.DeleteProduct(item)
         })
@@ -80,13 +81,13 @@ function Cart(props) {
                   <thead className="text-muted">
                     <tr className="small">
                       <th scope="col">Product</th>
-                      <th scope="col" width="120" className="d-none d-md-block">
+                      <th scope="col" width="120" className="d-none d-sm-none d-lg-block">
                         Price
                       </th>
                       <th scope="col" width="120">
                         Quantity
                       </th>
-                      <th scope="col" width="120" className="d-none d-md-block">
+                      <th scope="col" width="120" className="d-none d-sm-none d-lg-block">
                         Total
                       </th>
                     </tr>
@@ -119,7 +120,7 @@ function Cart(props) {
                             </figure>
                           </Link>
                         </td>
-                        <td className="d-none d-md-block">
+                        <td className="d-none d-lg-block">
                           <div className="price-wrap">
                             <var className="price">
                               ${item.product.final_price}
@@ -165,7 +166,7 @@ function Cart(props) {
                             </div>
                           </div>
                           <var
-                            className="price float-right mt-3 font-weight-bold d-md-none"
+                            className="price float-right mt-3 font-weight-bold d-lg-none"
                             style={{ fontSize: '1.5rem' }}
                           >
                             $
@@ -175,7 +176,7 @@ function Cart(props) {
                             )}
                           </var>
                         </td>
-                        <td className="d-none d-md-block">
+                        <td className="d-none d-lg-block">
                           <div className="price-wrap">
                             <var className="price">
                               $

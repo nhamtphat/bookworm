@@ -196,7 +196,7 @@ export default function Shop(props) {
               <div className="row">
                 {data.map((book) =>
                   view === 'grid' ? (
-                    <div key={book.id} className="col-md-3">
+                    <div key={book.id} className="col-sm-12 col-md-6 col-xl-3">
                       <BookGridFigure book={book} />
                     </div>
                   ) : (

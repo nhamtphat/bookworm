@@ -31,7 +31,7 @@ class ShopController extends Controller
                 $book_query = Book::select('books.id')
                     ->join('reviews', 'books.id', '=', 'reviews.book_id')
                     ->groupBy('books.id')
-                    ->havingRaw('round(AVG(cast(rating_start as integer))) >= ?', [$star]);
+                    ->havingRaw('round(AVG(cast(rating_start as integer))) = ?', [$star]);
                 $query = $query->whereIn('id', $book_query);
             } else {
                 $filter_by = $request->get('filter_by');

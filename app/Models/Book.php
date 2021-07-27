@@ -49,6 +49,11 @@ class Book extends Model
         return round($avg, 2);
     }
 
+    public function getReviewsCountAttribute()
+    {
+        return $reviews_count ?? $this->reviews->count();
+    }
+
     public function scopeSelectAvgStar($query)
     {
         return $query->addSelect([

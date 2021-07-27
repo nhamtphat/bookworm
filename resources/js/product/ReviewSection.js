@@ -106,12 +106,12 @@ export default function ReviewSection({ book, fetchBook }) {
                 </h5>
                 <div className="d-block my-2">
                   <h2>{book.avg_star} Star</h2>
+                  <span className="first">({book.reviews_count})</span>
                   {allFilters.map((filter, index) => (
                     <span
                       key={index}
                       className={
                         'filter-item ' +
-                        (index == 0 ? 'first ' : '') +
                         (currentFilter.filterValue == filter.value
                           ? 'font-weight-bold '
                           : '')

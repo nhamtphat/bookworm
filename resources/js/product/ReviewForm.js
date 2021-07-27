@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import {Overlay, Tooltip} from "react-bootstrap";
 
 export default function ReviewForm({ book, fetchData }) {
+  const [tooltipShow, setTooltipShow] = useState(false);
+  const tooltipTarget = useRef(null);
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
   const [ratingStart, setRatingStart] = useState(1)
@@ -51,13 +54,23 @@ export default function ReviewForm({ book, fetchData }) {
             <div className="col form-group">
               <label>Add a title: <span className="text-danger">*</span></label>
               <input
+                ref={tooltipTarget}
                 type="text"
                 className="form-control"
                 maxLength="120"
                 value={title}
                 required={true}
                 onChange={(e) => handleTitleChange(e)}
+                onMouseOver={() => setTooltipShow(true)}
+                onMouseOut={() => setTooltipShow(false)}
               />
+              <Overlay target={tooltipTarget.current} show={tooltipShow} placement="bottom">
+                {(props) => (
+                  <Tooltip id="overlay-example" {...props}>
+                    Max 120 characters
+                  </Tooltip>
+                )}
+              </Overlay>
             </div>
           </div>
           <div className="form-group">

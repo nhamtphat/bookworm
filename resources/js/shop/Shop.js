@@ -7,10 +7,10 @@ import FilterGroup from './FilterGroup'
 import axios from 'axios'
 import { Helmet } from 'react-helmet'
 import { Accordion } from 'react-bootstrap'
-import "../../css/Shop.css"
-import scrollToTop from "../_helpers/scrollToTop";
-import {Spin} from "antd";
-import LoadingSpin from "../common/LoadingSpin";
+import '../../css/Shop.css'
+import scrollToTop from '../_helpers/scrollToTop'
+import { Spin } from 'antd'
+import LoadingSpin from '../common/LoadingSpin'
 
 const initFilter = {
   filterBy: '',
@@ -44,7 +44,7 @@ export default function Shop(props) {
   ])
 
   useEffect(() => {
-    axios.get('/api/shop/filters').then((response) => {
+    axios.get('/api/books/filters').then((response) => {
       setAllFilters(response.data)
     })
   }, [])
@@ -63,7 +63,7 @@ export default function Shop(props) {
         filter_value: filter.filterValue,
       },
     }
-    axios.get('/api/shop', config).then((response) => {
+    axios.get('/api/books', config).then((response) => {
       setData(response.data.data)
       setMeta(response.data.meta)
     })
@@ -102,7 +102,7 @@ export default function Shop(props) {
   }
 
   function dataIsReady() {
-    return (allFilters.length > 0 && data.length > 0);
+    return allFilters.length > 0 && data.length > 0
   }
 
   return (

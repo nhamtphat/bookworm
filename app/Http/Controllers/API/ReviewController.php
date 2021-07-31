@@ -7,6 +7,7 @@ use App\Http\Resources\ReviewResource;
 use App\Models\Book;
 use App\Models\Review;
 use App\Supports\ReviewFilter;
+use App\Supports\ShopFilter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -37,7 +38,7 @@ class ReviewController extends Controller
 
     public function getAllFilters(Book $book)
     {
-        $rating_filter = ReviewFilter::getFiltersOfBook($book);
+        $rating_filter = ShopFilter::getFiltersOfBook($book);
 
         return [$rating_filter];
     }

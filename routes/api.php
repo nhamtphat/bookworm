@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\BookController;
+use App\Http\Controllers\API\FilterController;
 use App\Http\Controllers\API\HomepageController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ReviewController;
@@ -18,11 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('homepage', [HomepageController::class, 'index']);
-Route::get('shop', [ShopController::class, 'getProducts']);
-Route::get('shop/filters', [ShopController::class, 'getAllFilters']);
-Route::get('books/{book}/reviews/filters', [ReviewController::class, 'getAllFilters']);
+Route::get('books/filters', [BookController::class, 'filters']);
+Route::apiResource('books', BookController::class)->only('index', 'show');
 
-Route::apiResource('books', BookController::class)->only('show');
+Route::get('reviews/filters', [ReviewController::class, 'filters']);
 Route::apiResource('books.reviews', ReviewController::class)->shallow()->only('index', 'store');
+
 Route::apiResource('orders', OrderController::class)->only('store');

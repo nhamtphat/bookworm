@@ -21,23 +21,13 @@ class ShopController extends Controller
 
     public function getProducts(Request $request)
     {
+        $limit = $request->limit;
         $per_page = $request->per_page ?? 20;
 
         $query = $this->bookModel->with('author', 'category', 'availableDiscounts', 'reviews')->selectFinalPrice();
 
-        if ($request->get('filter_by') != '' && $request->get('filter_value') != '') {
-            if ($request->get('filter_by') == 'star') {
-                $star = $request->get('filter_value');
-                $book_query = Book::select('books.id')
-                    ->join('reviews', 'books.id', '=', 'reviews.book_id')
-                    ->groupBy('books.id')
-                    ->havingRaw('round(AVG(cast(rating_start as integer))) = ?', [$star]);
-                $query = $query->whereIn('id', $book_query);
-            } else {
-                $filter_by = $request->get('filter_by');
-                $filter_value = $request->get('filter_value');
-                $query = $query->where($filter_by, $filter_value);
-            }
+        if ($request->filter_by != '' && $request->filter_value != '') {
+            $query = $query->filterBy($request->filter_by, $request->filter_value);
         }
 
         switch ($request->get('sort_by')) {
@@ -49,11 +39,13 @@ class ShopController extends Controller
                 break;
 
             case 'asc_price':
-                $query = $query->orderBy('final_price');
+                $query = $query
+                    ->orderBy('final_price');
                 break;
 
             case 'desc_price':
-                $query = $query->orderByDesc('final_price');
+                $query = $query
+                    ->orderByDesc('final_price');
                 break;
 
             default:
@@ -62,8 +54,6 @@ class ShopController extends Controller
                     ->orderByDesc('sub_price')
                     ->orderBy('final_price');
         }
-
-//        return $query->toSql();
 
         return BookResource::collection($query->paginate($per_page));
     }

@@ -3,41 +3,89 @@
 namespace App\Supports;
 
 use App\Models\Author;
+use App\Models\Book;
 use App\Models\Category;
+use App\Models\Review;
+use Illuminate\Support\Collection;
 
 class ShopFilter
 {
-    public function __construct($title, $query_key, $data)
+    protected $query;
+
+    public function __construct($query)
     {
-        $this->title = $title;
-        $this->query_key = $query_key;
-        $this->data = $data;
+        $this->query = $query;
     }
 
     public static function getFiltersByAuthor()
     {
         $authors = Author::orderBy('author_name')->get(['id', 'author_name'])->map(function ($author) {
-            return new ShopFilterData($author->author_name, $author->id);
+            return [
+                'name' => $author->author_name,
+                'value' => $author->id
+            ];
         });
 
-        return new ShopFilter('Author', 'author_id', $authors);
+        return [
+            'title' => 'Author',
+            'query_key' => 'author_id',
+            'data' => $authors
+        ];
     }
 
     public static function getFiltersByCategory()
     {
         $categories = Category::orderBy('category_name')->get(['id', 'category_name'])->map(function ($category) {
-            return new ShopFilterData($category->category_name, $category->id);
+            return [
+                'name' => $category->category_name,
+                'value' => $category->id
+            ];
         });
 
-        return new ShopFilter('Category', 'category_id', $categories);
+        return [
+            'title' => 'Category',
+            'query_key' => 'category_id',
+            'data' => $categories
+        ];
     }
 
     public static function getFiltersByStar()
     {
         $ratings = collect([1, 2, 3, 4, 5])->map(function ($star) {
-            return new ShopFilterData("$star star", $star);
+            return [
+                'name' => "$star star",
+                'value' => $star
+            ];
         });
 
-        return new ShopFilter('Rating', 'star', $ratings);
+        return [
+            'title' => 'Rating',
+            'query_key' => 'star',
+            'data' => $ratings
+        ];
+    }
+
+    public static function getFiltersOfBook(Book $book)
+    {
+        if (isset($book)) {
+            $reviews_count = $book->reviews()->selectRaw('rating_start, count(*)')->groupBy('rating_start')->get();
+        } else {
+            $reviews_count = Review::selectRaw('rating_start, count(*)')->groupBy('rating_start')->get();
+        }
+
+        $ratings = collect([1, 2, 3, 4, 5])->map(function ($star) use ($reviews_count) {
+            $count = $reviews_count->firstWhere('rating_start', $star)->count ?? 0;
+
+            return [
+                'name' => "$star star ($count)",
+                'value' => $star
+            ];
+        });
+
+        return [
+            'title' => 'Rating',
+            'query_key' => 'star',
+            'data' => $ratings
+        ];
     }
 }

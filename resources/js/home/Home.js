@@ -17,11 +17,38 @@ export default function Home() {
   const [view, setView] = useState('recommended')
 
   useEffect(() => {
-    axios.get('/api/homepage').then((response) => {
-      setOnSaleBooks(response.data.onsale_books)
-      setRecommendedBooks(response.data.recommended_books)
-      setPopularBooks(response.data.popular_books)
-    })
+    axios
+      .get('/api/books', {
+        params: {
+          limit: 10,
+          sort_by: 'on-sale',
+        },
+      })
+      .then((response) => {
+        setOnSaleBooks(response.data.data)
+      })
+
+    axios
+      .get('/api/books', {
+        params: {
+          limit: 8,
+          sort_by: 'recommended',
+        },
+      })
+      .then((response) => {
+        setRecommendedBooks(response.data.data)
+      })
+
+    axios
+      .get('/api/books', {
+        params: {
+          limit: 8,
+          sort_by: 'popularity',
+        },
+      })
+      .then((response) => {
+        setPopularBooks(response.data.data)
+      })
   }, [])
 
   const settings = {
@@ -40,10 +67,7 @@ export default function Home() {
   }
 
   function dataIsReady() {
-    return !(
-      recommendedBooks.length == 0 ||
-      popularBooks.length == 0
-    )
+    return !(recommendedBooks.length == 0 || popularBooks.length == 0)
   }
 
   return (
@@ -56,8 +80,6 @@ export default function Home() {
         {!dataIsReady() ? <LoadingSpin /> : null}
 
         <div className={'container ' + (dataIsReady() ? '' : 'd-none')}>
-
-
           {onSaleBook.length > 0 ? (
             <div>
               <div className="row">
@@ -77,7 +99,7 @@ export default function Home() {
                 ))}
               </Slider>
             </div>
-          ): null}
+          ) : null}
 
           <div className="p-3 mt-5 text-center">
             <h4>Featured Books</h4>

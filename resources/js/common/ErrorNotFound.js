@@ -1,6 +1,6 @@
 import Layout from '../layouts/Layout'
 import notfound from '../../assets/images/notfound.svg'
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 export default function ErrorNotFound() {
   return (
@@ -19,7 +19,9 @@ export default function ErrorNotFound() {
                 a mystery. But you can click the button below to go back to the
                 homepage.
               </p>
-              <Link to="/" className="btn btn-secondary">GO BACK HOME</Link>
+              <Link to="/" className="btn btn-secondary">
+                GO BACK HOME
+              </Link>
             </div>
           </div>
         </div>

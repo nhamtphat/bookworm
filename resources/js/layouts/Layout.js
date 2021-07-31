@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 import { useLocation } from 'react-router-dom'
-import scrollToTop from "../_helpers/scrollToTop"
+import scrollToTop from '../_helpers/scrollToTop'
 // // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 // Fonticons
@@ -15,7 +15,7 @@ import '../../assets/sass/responsive.scss'
 import '../../assets/sass/_variables-custom.scss'
 // Package
 import 'react-toastify/dist/ReactToastify.css'
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.css'
 
 export default function Layout(props) {
   const { pathname } = useLocation()

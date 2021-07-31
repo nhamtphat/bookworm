@@ -81,13 +81,21 @@ function Cart(props) {
                   <thead className="text-muted">
                     <tr className="small">
                       <th scope="col">Product</th>
-                      <th scope="col" width="120" className="d-none d-sm-none d-lg-block">
+                      <th
+                        scope="col"
+                        width="120"
+                        className="d-none d-sm-none d-lg-block"
+                      >
                         Price
                       </th>
                       <th scope="col" width="120">
                         Quantity
                       </th>
-                      <th scope="col" width="120" className="d-none d-sm-none d-lg-block">
+                      <th
+                        scope="col"
+                        width="120"
+                        className="d-none d-sm-none d-lg-block"
+                      >
                         Total
                       </th>
                     </tr>
@@ -125,7 +133,8 @@ function Cart(props) {
                             <var className="price">
                               ${item.product.final_price}
                             </var>
-                            {(item.product.final_price === item.product.book_price) ?(
+                            {item.product.final_price ===
+                            item.product.book_price ? (
                               <del className="sub-text">
                                 ${item.product.book_price}
                               </del>

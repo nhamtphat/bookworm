@@ -18,4 +18,4 @@ const pReducer = persistReducer(persistConfig, rootReducer)
 export const store = createStore(pReducer, applyMiddleware(thunkMiddleware))
 export const persistor = persistStore(store)
 
-window.addEventListener('storage', crossBrowserListener(store, persistConfig));
+window.addEventListener('storage', crossBrowserListener(store, persistConfig))

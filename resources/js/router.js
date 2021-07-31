@@ -6,7 +6,7 @@ import Product from './product/Product'
 import Shop from './shop/Shop'
 import Cart from './cart/Cart'
 import About from './about/About'
-import ErrorNotFound from "./common/ErrorNotFound";
+import ErrorNotFound from './common/ErrorNotFound'
 
 export default function router() {
   return (

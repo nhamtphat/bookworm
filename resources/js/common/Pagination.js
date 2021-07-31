@@ -26,7 +26,6 @@ export default function Pagination(props) {
       }
     }
 
-
     for (let number = start; number <= stop; number++) {
       items.push(
         <PaginationItem

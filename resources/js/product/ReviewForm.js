@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import {Overlay, Tooltip} from "react-bootstrap";
+import { Overlay, Tooltip } from 'react-bootstrap'
 
 export default function ReviewForm({ book, fetchData }) {
-  const [tooltipShow, setTooltipShow] = useState(false);
-  const tooltipTarget = useRef(null);
+  const [tooltipShow, setTooltipShow] = useState(false)
+  const tooltipTarget = useRef(null)
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
   const [ratingStart, setRatingStart] = useState(1)
@@ -52,7 +52,9 @@ export default function ReviewForm({ book, fetchData }) {
         <form onSubmit={(e) => handleSubmit(e)}>
           <div className="form-row">
             <div className="col form-group">
-              <label>Add a title: <span className="text-danger">*</span></label>
+              <label>
+                Add a title: <span className="text-danger">*</span>
+              </label>
               <input
                 ref={tooltipTarget}
                 type="text"
@@ -64,7 +66,11 @@ export default function ReviewForm({ book, fetchData }) {
                 onMouseOver={() => setTooltipShow(true)}
                 onMouseOut={() => setTooltipShow(false)}
               />
-              <Overlay target={tooltipTarget.current} show={tooltipShow} placement="bottom">
+              <Overlay
+                target={tooltipTarget.current}
+                show={tooltipShow}
+                placement="bottom"
+              >
                 {(props) => (
                   <Tooltip id="overlay-example" {...props}>
                     Max 120 characters
@@ -83,7 +89,9 @@ export default function ReviewForm({ book, fetchData }) {
             ></textarea>
           </div>
           <div className="form-group">
-            <label>Select a rating star: <span className="text-danger">*</span></label>
+            <label>
+              Select a rating star: <span className="text-danger">*</span>
+            </label>
             <select
               className="form-control"
               value={ratingStart}

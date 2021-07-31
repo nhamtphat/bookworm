@@ -35,7 +35,7 @@ function Product(props) {
   }
 
   function dataIsReady() {
-    return (book.book_title != null)
+    return book.book_title != null
   }
 
   return (
@@ -162,7 +162,6 @@ function Product(props) {
             </div>
           </div>
           <ReviewSection book={book} fetchBook={fetchBook} />
-
         </div>
       </section>
     </Layout>

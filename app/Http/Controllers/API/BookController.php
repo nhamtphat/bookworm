@@ -7,6 +7,8 @@ use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Supports\ShopFilter;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class BookController extends Controller
 {
@@ -17,57 +19,34 @@ class BookController extends Controller
 
     public function index(Request $request)
     {
-        $per_page = $request->per_page ?? 20;
+        $query = $this->bookModel
+            ->with('author', 'category', 'availableDiscounts', 'reviews')
+            ->withCount('reviews')
+            ->selectAvgStar()
+            ->selectFinalPrice()
+            ->selectSubPrice();
 
-        $query = $this->bookModel->with('author', 'category', 'availableDiscounts', 'reviews')->selectFinalPrice();
-
-        if ($request->filter_by != '' && $request->filter_value != '') {
-            $query = $query->filterBy($request->filter_by, $request->filter_value);
-        }
-
-        switch ($request->get('sort_by')) {
-            case 'on-sale':
-                $query = $query
-                    ->selectSubPrice()
-                    ->orderByDesc('sub_price')
-                    ->orderBy('final_price');
-                break;
-
-            case 'recommended':
-                $query = $query
-                    ->selectAvgStar()
-                    ->orderByDesc('avg_star')
-                    ->orderBy('final_price');
-                break;
-
-            case 'popularity':
-                $query = $query
-                    ->withCount('reviews')
-                    ->orderByDesc('reviews_count')
-                    ->orderBy('final_price');
-                break;
-
-            case 'asc_price':
-                $query = $query
-                    ->orderBy('final_price');
-                break;
-
-            case 'desc_price':
-                $query = $query
-                    ->orderByDesc('final_price');
-                break;
-
-            default:
-                break;
-        }
+        $query = QueryBuilder::for($query)
+            ->allowedFilters([
+                AllowedFilter::exact('category', 'category_id'),
+                AllowedFilter::exact('author', 'author_id'),
+                AllowedFilter::scope('star')
+            ])
+            ->defaultSort('-sub_price')
+            ->allowedSorts([
+                'sub_price',
+                'final_price',
+                'avg_star',
+                'reviews_count'
+            ]);
 
         if($request->has('limit') && $request->limit != '') {
-            $books_colelction = $query->limit($request->limit)->get();
+            $books_collection = $query->limit($request->limit)->get();
         } else {
-            $books_colelction = $query->paginate($per_page);
+            $books_collection = $query->paginate($request->per_page ?? 20);
         }
 
-        return BookResource::collection($books_colelction);
+        return BookResource::collection($books_collection);
     }
 
     public function show(Book $book)

@@ -100,19 +100,13 @@ class Book extends Model
         ]);
     }
 
-    public function scopeFilterBy($query, $filter_key, $filter_value)
-    {
-        if ($filter_key == 'star') return $query->filterByStar($filter_value);
-
-        return $query->where($filter_key, $filter_value);
-    }
-
-    public function scopeFilterByStar($query, $star)
+    public function scopeStar($query, $star)
     {
         $book_query = static::select('books.id')
             ->join('reviews', 'books.id', '=', 'reviews.book_id')
             ->groupBy('books.id')
             ->havingRaw('round(AVG(cast(rating_start as integer))) = ?', [$star]);
+
         return $query->whereIn('id', $book_query);
     }
 }

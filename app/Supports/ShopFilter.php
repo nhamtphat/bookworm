@@ -28,7 +28,7 @@ class ShopFilter
 
         return [
             'title' => 'Author',
-            'query_key' => 'author_id',
+            'query_key' => 'author',
             'data' => $authors
         ];
     }
@@ -44,7 +44,7 @@ class ShopFilter
 
         return [
             'title' => 'Category',
-            'query_key' => 'category_id',
+            'query_key' => 'category',
             'data' => $categories
         ];
     }

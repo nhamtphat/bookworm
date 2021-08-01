@@ -36,13 +36,6 @@ class ReviewController extends Controller
         return ReviewResource::collection($query->paginate($per_page));
     }
 
-    public function getAllFilters(Book $book)
-    {
-        $rating_filter = ShopFilter::getFiltersOfBook($book);
-
-        return [$rating_filter];
-    }
-
     public function store(Request $request, Book $book)
     {
         $validation = Validator::make($request->all(), [
@@ -61,5 +54,14 @@ class ReviewController extends Controller
         $review = $book->reviews()->create($request->all());
 
         return response($review, 201);
+    }
+
+    public function filters(Request $request)
+    {
+        $book = $this->bookModel->findOrFail($request->book_id);
+
+        $rating_filter = ShopFilter::getFiltersOfBook($book);
+
+        return [$rating_filter];
     }
 }

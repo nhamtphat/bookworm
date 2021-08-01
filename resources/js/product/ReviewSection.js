@@ -53,9 +53,11 @@ export default function ReviewSection({ book, fetchBook }) {
       setMeta(response.data.meta)
     })
 
-    axios.get(`/api/books/${book.id}/reviews/filters`).then((response) => {
-      setAllFilters(response.data[0].data)
-    })
+    axios
+      .get(`/api/reviews/filters`, { params: { book_id: book.id } })
+      .then((response) => {
+        setAllFilters(response.data[0].data)
+      })
   }
 
   function getBook() {

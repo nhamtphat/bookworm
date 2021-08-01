@@ -21,7 +21,7 @@ export default function Home() {
       .get('/api/books', {
         params: {
           limit: 10,
-          sort_by: 'on-sale',
+          sort: '-sub_price,final_price',
         },
       })
       .then((response) => {
@@ -32,7 +32,7 @@ export default function Home() {
       .get('/api/books', {
         params: {
           limit: 8,
-          sort_by: 'recommended',
+          sort: '-avg_star,final_price',
         },
       })
       .then((response) => {
@@ -43,7 +43,7 @@ export default function Home() {
       .get('/api/books', {
         params: {
           limit: 8,
-          sort_by: 'popularity',
+          sort: '-reviews_count,final_price',
         },
       })
       .then((response) => {

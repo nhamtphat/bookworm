@@ -21,8 +21,8 @@ const initFilter = {
 
 export default function Shop(props) {
   const [view, setView] = useState('grid')
-  const [sortBy, setSortBy] = useState('on_sale')
-  const [filter, setFilter] = useState(initFilter)
+  const [sortBy, setSortBy] = useState('-sub_price,final_price')
+  const [appliedFilters, setAppliedFilters] = useState({})
   const [allFilters, setAllFilters] = useState([])
   const [perPage, setPerPage] = useState(20)
   const [page, setPage] = useState(1)
@@ -30,10 +30,10 @@ export default function Shop(props) {
   const [meta, setMeta] = useState({})
 
   const sortMode = useRef([
-    { mode: 'onsale', name: 'Sort by on sale' },
-    { mode: 'popularity', name: 'Sort by popularity' },
-    { mode: 'asc_price', name: 'Sort by price: low to high' },
-    { mode: 'desc_price', name: 'Sort by price: high to low' },
+    { mode: '-sub_price,final_price', name: 'Sort by on sale' },
+    { mode: '-reviews_count,final_price', name: 'Sort by popularity' },
+    { mode: 'final_price', name: 'Sort by price: low to high' },
+    { mode: '-final_price', name: 'Sort by price: high to low' },
   ])
 
   const perPageMode = useRef([
@@ -51,16 +51,14 @@ export default function Shop(props) {
 
   useEffect(() => {
     fetchData()
-  }, [page, sortBy, perPage, filter])
+  }, [page, sortBy, perPage, appliedFilters])
 
   function fetchData() {
     const config = {
       params: {
-        per_page: perPage,
         page: page,
-        sort_by: sortBy,
-        filter_by: filter.filterBy,
-        filter_value: filter.filterValue,
+        sort: sortBy,
+        ...appliedFilters,
       },
     }
     axios.get('/api/books', config).then((response) => {
@@ -79,20 +77,30 @@ export default function Shop(props) {
     setPerPage(event.target.value)
   }
 
+  function checkIfExists(element, arr) {
+    return arr.some((item) => {
+      return item === element
+    })
+  }
+
   function changeFilter(new_filter, filterData) {
     changePage(1)
-    if (
-      filter.filterBy == new_filter.query_key &&
-      filter.filterValue == filterData.value
-    ) {
-      setFilter(initFilter)
-      return
+    let currentValue = appliedFilters[`filter[${new_filter.query_key}]`]
+    let valueArray = []
+
+    if (currentValue != undefined) {
+      valueArray = new String(currentValue)
+        .split(',')
+        .map((item) => parseInt(item))
     }
-    setFilter({
-      filterBy: new_filter.query_key,
-      filterValue: filterData.value,
-      filterByTitle: new_filter.title,
-      filterValueName: filterData.name,
+
+    if (!checkIfExists(filterData.value, valueArray)) {
+      valueArray.push(filterData.value)
+    }
+
+    setAppliedFilters({
+      ...appliedFilters,
+      [`filter[${new_filter.query_key}]`]: valueArray.join(),
     })
   }
 
@@ -116,14 +124,7 @@ export default function Shop(props) {
         <div className={'container ' + (dataIsReady() ? '' : 'd-none')}>
           <div className="row mb-5">
             <div className="col-12">
-              <h3 className="border-bottom p-3">
-                Books
-                {filter.filterByTitle != '' ? (
-                  <span className="sub-text ml-2">
-                    (Filterd by {filter.filterByTitle} {filter.filterValueName})
-                  </span>
-                ) : null}
-              </h3>
+              <h3 className="border-bottom p-3">Books</h3>
             </div>
           </div>
           <div className="row">
@@ -134,7 +135,7 @@ export default function Shop(props) {
                   <FilterGroup
                     key={allFilter.query_key}
                     filter={allFilter}
-                    currentFilter={filter}
+                    currentFilter={appliedFilters}
                     onChange={changeFilter}
                   />
                 ))}
